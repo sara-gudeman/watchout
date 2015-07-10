@@ -49,7 +49,7 @@ var board = d3.select('.gameboard').append('svg')
   .append('g');
 
 // draw a player on the gameboard
-var drawPlayer = function(cx, cy) {   
+var drawEnemy = function(cx, cy) {   
   board.append('circle')
     .attr('cx', cx)
     .attr('cy', cy)
@@ -60,7 +60,7 @@ var drawPlayer = function(cx, cy) {
 // create some enemies for game
 var makeEnemies = function(num) {
   for (var i = 0; i < num; i++) {
-    drawPlayer(makeRandomNum(width), makeRandomNum(height));
+    drawEnemy(makeRandomNum(width), makeRandomNum(height));
   }
 }
 
@@ -76,9 +76,21 @@ var moveEnemies = function() {
     });
 }
 
+// var player = new Player(width / 2, height / 2, 'friend');
+var drawPlayer = function(cx, cy) {
+  board.append('path')
+    .attr('d', 'M230 80 A 45 45, 0, 1, 0, 275 125 L 275 80 Z')
+    .attr('fill', 'blue')
+    .attr('transform', 'scale(.5)');
+}
+// <path d="M230 80
+//            A 45 45, 0, 1, 0, 275 125
+//            L 275 80 Z" fill="red"/>
+
+drawPlayer(0, 0);
+
 // part of setup
 makeEnemies(4);
-var player = new Player(width / 2, height / 2, 'friend');
 setInterval(moveEnemies, 1000);
 
 // d3.select('.gameboard')
