@@ -64,8 +64,22 @@ var makeEnemies = function(num) {
   }
 }
 
+var moveEnemies = function() {
+  board.selectAll('circle')
+    .transition()
+    .duration(1000)
+    .attr('cx', function(d, i) {
+      return makeRandomNum(width);
+    })
+    .attr('cy', function(d, i) {
+      return makeRandomNum(height);
+    });
+}
+
+// part of setup
 makeEnemies(4);
 var player = new Player(width / 2, height / 2, 'friend');
+setInterval(moveEnemies, 1000);
 
 // d3.select('.gameboard')
 //     .data([player], function(d){return [player]})
