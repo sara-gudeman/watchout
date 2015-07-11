@@ -16,7 +16,7 @@
 
 // enemy movement module
 // -- check all enemies
-// -- monitor positions
+// -- monitor positions 
 
 // collision detection module
 
@@ -46,12 +46,11 @@ var sendMessage = function(text) {
 }
 
 // Player constructor function
-var Player = function(x, y, type) {
-  this.body;
-  this.x = x || 0;
-  this.y = y || 0;
-  this.type = type || "enemy";
-};
+//    this.body;
+//   this.x = x || 0;
+//   this.y = y || 0;
+//   this.type = type || "enemy";
+// };
 
 // game board selector
 var board = d3.select('.gameboard').append('svg')
@@ -106,6 +105,13 @@ var drawEnemy = function(cx, cy) {
     .attr('fill', 'red')
     .transition().duration(750)
     .attr('fill','black');
+
+    d3.selectAll('circle').append('image');
+  // d3.selectAll('circle').enter().append('image');
+  // d3.selectAll('circle')
+  //   .enter()
+  //   .append('image');
+      // .attr('xlink: href', 'shuriken.png');
     // .call(drag);
 };
 
@@ -114,6 +120,8 @@ var makeEnemies = function(num) {
   for (var i = 0; i < num; i++) {
     drawEnemy(makeRandomNum(width), makeRandomNum(height));
   }
+  console.log(board.selectAll('circle'));
+  board.selectAll('circle').select('path');
   sendMessage('New enemy added');
 }
 
@@ -142,7 +150,7 @@ var drawPlayer = function(cx, cy) {
     .attr('width', 25)
     .attr('height', 25)
     .attr('fill', 'blue')
-    // .attr('class', 'rotate')
+    .attr('class', 'rotate')
     .call(dragPath);
 }
 
@@ -189,6 +197,7 @@ d3.select('.collisions div').text(0);
 d3.select('.high div').text(0);
 makeEnemies(4);
 drawPlayer(0, 0);
+
 setInterval(increaseScore, 100);
 setInterval(moveEnemies, 1000);
 board.selectAll('circle').call(drag);
