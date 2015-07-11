@@ -102,11 +102,15 @@ var drawEnemy = function(cx, cy) {
     .attr('cx', cx)
     .attr('cy', cy)
     .attr('r', 20)
-    .attr('fill', 'red')
-    .transition().duration(750)
-    .attr('fill','black');
+    .attr('fill', 'transparent')
+    // .transition().duration(750)
+    // .attr('fill','url(asteroid.png)');
+    .style("fill", "url(#image)");
 
-    d3.selectAll('circle').append('image');
+    // d3.selectAll('circle').append('image');
+
+
+
   // d3.selectAll('circle').enter().append('image');
   // d3.selectAll('circle')
   //   .enter()
