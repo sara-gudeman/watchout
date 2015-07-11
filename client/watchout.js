@@ -62,15 +62,29 @@ var drag = d3.behavior.drag()
 
 var dragPath = d3.behavior.drag()
      .on('drag', function(d){
+
+      var boundX = d3.event.x;
+      var boundY = d3.event.y;
+
+      var elementDimension = d3.select(this).attr('width');
+
+      if (d3.event.x >= width - elementDimension) {
+        boundX = width - elementDimension;
+      }
+      if (d3.event.x <= 0) {
+        boundX = 0;
+      }
+      if (d3.event.y >= height - elementDimension) {
+        boundY = height - elementDimension;
+      }
+      if (d3.event.y <= 0) {
+        boundY = 0;
+      }
       d3.select(this)
       .transition()
       .duration(15)
-      .attr('x', d3.event.x)
-      .attr('y', d3.event.y);
-      // .transition()
-      // .duration(15)
-
-      // .attr('transform','scale(.5) translate(' +d3.event.x *2+ ','+ d3.event.y*2 +')')
+      .attr('x', boundX)
+      .attr('y', boundY);
      });
 
 
@@ -124,19 +138,25 @@ var detectCollision = function(player) {
   var playerY = player.attr('y');
   board.selectAll('circle').each(function(d, i ){
     var cx = d3.select(this).attr('cx');
-    var cy = d3.select(this).attr('cy');
+    var cy = d3.select(this).attr(  'cy');
     if (Math.abs(cx - playerX) < 30 && Math.abs(cy - playerY) < 30) {
+      if (highScore < score) {
+        highScore = score;
+        d3.select('.high div').text(highScore);
+      }
       score = 0;
-      collisions++;
-      d3.select('.collisions span').text(collisions);
-      d3.select('.current span').text(score);
+      collisions++; 
+      d3.select('.collisions div').text(collisions);
+      d3.select('.current div').text(score);
     }
   });
 };
 
 var increaseScore = function() {
   score++;
-  d3.select('.current span').text(score);
+  // highScore+= score;
+  d3.select('.current div').text(score);
+  // d3.select('.high div').text(highScore);
 };
 
 setInterval(function(){
@@ -145,9 +165,9 @@ setInterval(function(){
 
 
 // part of setup
-d3.select('.current span').text(0);
-d3.select('.collisions span').text(0);
-d3.select('.high span').text(0);
+d3.select('.current div').text(0);
+d3.select('.collisions div').text(0);
+d3.select('.high div').text(0);
 makeEnemies(4);
 drawPlayer(0, 0);
 setInterval(increaseScore, 100);
