@@ -25,8 +25,7 @@
 
 
 
-// setup
-
+// setup                
 var height = 400,
     width = 400;
 
@@ -48,6 +47,30 @@ var board = d3.select('.gameboard').append('svg')
     .attr('height', height)
   .append('g');
 
+// setup draggable elements
+var drag = d3.behavior.drag()
+     .on('drag', function(d){
+      d3.select(this)
+      .transition()
+      .duration(15)
+      .attr('cx', d3.event.x)
+      .attr('cy', d3.event.y);
+     });
+
+var dragPath = d3.behavior.drag()
+     .on('drag', function(d){
+      d3.select(this)
+      .transition()
+      .duration(15)
+      .attr('x', d3.event.x)
+      .attr('y', d3.event.y);
+      // .transition()
+      // .duration(15)
+
+      // .attr('transform','scale(.5) translate(' +d3.event.x *2+ ','+ d3.event.y*2 +')')
+     });
+
+
 // draw a player on the gameboard
 var drawEnemy = function(cx, cy) {   
   board.append('circle')
@@ -55,6 +78,7 @@ var drawEnemy = function(cx, cy) {
     .attr('cy', cy)
     .attr('r', 20)
     .attr('fill', 'red')
+    .call(drag);
 };
 
 // create some enemies for game
@@ -76,39 +100,28 @@ var moveEnemies = function() {
     });
 }
 
+
 // var player = new Player(width / 2, height / 2, 'friend');
 var drawPlayer = function(cx, cy) {
-  board.append('path')
-    .attr('d', 'M230 80 A 45 45, 0, 1, 0, 275 125 L 275 80 Z')
+  // board.append('path')
+  //   .attr('d', 'M230 80 A 45 45, 0, 1, 0, 275 125 L 275 80 Z')
+  //   .attr('fill', 'blue')
+  //   .attr('transform', 'scale(.5)');
+  board.append('rect')
+    .attr('x', width/2)
+    .attr('y', height/2)
+    .attr('width', 25)
+    .attr('height', 25)
     .attr('fill', 'blue')
-    .attr('transform', 'scale(.5)');
+    .call(dragPath);
 }
-// <path d="M230 80
-//            A 45 45, 0, 1, 0, 275 125
-//            L 275 80 Z" fill="red"/>
 
-drawPlayer(0, 0);
 
 // part of setup
 makeEnemies(4);
+drawPlayer(0, 0);
 setInterval(moveEnemies, 1000);
-
-// d3.select('.gameboard')
-//     .data([player], function(d){return [player]})
-//     // .data(player)
-//     // .enter()
-//     // .append('svg')
-//     //   .attr('width', 40)
-//     //   .attr('height', 40)
-//       .append('circle')
-//         .attr('cx', 20)
-//         .attr('cy', 20)
-//         .attr('r', 20)
-//         .attr('fill', 'red');
-
-// d3.select('.gameboard')
-//     .data([player], function(d){return [player]})
-//     .attr('width', 100);
-
+board.selectAll('circle').call(drag);
+board.selectAll('path').call(dragPath);
 
   
