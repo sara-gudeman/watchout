@@ -36,6 +36,15 @@ var makeRandomNum = function(factor) {
   return Math.floor(Math.random() * factor);
 }
 
+var sendMessage = function(text) {
+  d3.select('.messageboard span')
+  .text(text)
+  .transition().duration(500)
+  .style('opacity', 1)
+  .transition().duration(2000)
+  .style('opacity', 0);
+}
+
 // Player constructor function
 var Player = function(x, y, type) {
   this.body;
@@ -95,7 +104,9 @@ var drawEnemy = function(cx, cy) {
     .attr('cy', cy)
     .attr('r', 20)
     .attr('fill', 'red')
-    .call(drag);
+    .transition().duration(750)
+    .attr('fill','black');
+    // .call(drag);
 };
 
 // create some enemies for game
@@ -103,6 +114,7 @@ var makeEnemies = function(num) {
   for (var i = 0; i < num; i++) {
     drawEnemy(makeRandomNum(width), makeRandomNum(height));
   }
+  sendMessage('New enemy added');
 }
 
 var moveEnemies = function() {
@@ -130,6 +142,7 @@ var drawPlayer = function(cx, cy) {
     .attr('width', 25)
     .attr('height', 25)
     .attr('fill', 'blue')
+    // .attr('class', 'rotate')
     .call(dragPath);
 }
 
@@ -141,9 +154,15 @@ var detectCollision = function(player) {
     var cy = d3.select(this).attr(  'cy');
     if (Math.abs(cx - playerX) < 30 && Math.abs(cy - playerY) < 30) {
       if (highScore < score) {
+        var prevHighScore = highScore;
         highScore = score;
+        var newEnemiestoAdd = Math.floor(highScore / 100) - Math.floor(prevHighScore/100);
+        if (newEnemiestoAdd > 0) {
+          makeEnemies(newEnemiestoAdd);
+        }
         d3.select('.high div').text(highScore);
       }
+      
       score = 0;
       collisions++; 
       d3.select('.collisions div').text(collisions);
