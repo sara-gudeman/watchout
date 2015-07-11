@@ -116,6 +116,22 @@ var drawPlayer = function(cx, cy) {
     .call(dragPath);
 }
 
+var detectCollision = function(player) {
+  var playerX = player.attr('x');
+  var playerY = player.attr('y');
+  board.selectAll('circle').each(function(d, i ){
+    var cx = d3.select(this).attr('cx');
+    var cy = d3.select(this).attr('cy');
+    if (cx - playerX < 10 && cy - playerY < 10) {
+      console.log("hit");
+    }
+  });
+};
+
+setInterval(function(){
+  detectCollision(board.select('rect'));  
+},200)
+
 
 // part of setup
 makeEnemies(4);
