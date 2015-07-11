@@ -27,7 +27,10 @@
 
 // setup                
 var height = 400,
-    width = 400;
+    width = 400,
+    score = 0,
+    highScore = 0,
+    collisions = 0;
 
 var makeRandomNum = function(factor) {
   return Math.floor(Math.random() * factor);
@@ -122,20 +125,32 @@ var detectCollision = function(player) {
   board.selectAll('circle').each(function(d, i ){
     var cx = d3.select(this).attr('cx');
     var cy = d3.select(this).attr('cy');
-    if (cx - playerX < 10 && cy - playerY < 10) {
-      console.log("hit");
+    if (Math.abs(cx - playerX) < 30 && Math.abs(cy - playerY) < 30) {
+      score = 0;
+      collisions++;
+      d3.select('.collisions span').text(collisions);
+      d3.select('.current span').text(score);
     }
   });
 };
 
+var increaseScore = function() {
+  score++;
+  d3.select('.current span').text(score);
+};
+
 setInterval(function(){
   detectCollision(board.select('rect'));  
-},200)
+},200);
 
 
 // part of setup
+d3.select('.current span').text(0);
+d3.select('.collisions span').text(0);
+d3.select('.high span').text(0);
 makeEnemies(4);
 drawPlayer(0, 0);
+setInterval(increaseScore, 100);
 setInterval(moveEnemies, 1000);
 board.selectAll('circle').call(drag);
 board.selectAll('path').call(dragPath);
