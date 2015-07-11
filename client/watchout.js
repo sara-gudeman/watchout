@@ -27,7 +27,7 @@
 
 // setup                
 var height = 400,
-    width = 400,
+    width = window.innerWidth,
     score = 0,
     highScore = 0,
     collisions = 0;
@@ -70,12 +70,9 @@ var drag = d3.behavior.drag()
 
 var dragPath = d3.behavior.drag()
      .on('drag', function(d){
-
-      var boundX = d3.event.x;
-      var boundY = d3.event.y;
-
       var elementDimension = d3.select(this).attr('width');
-
+      var boundX = d3.event.x - elementDimension / 2;
+      var boundY = d3.event.y - elementDimension / 2;
       if (d3.event.x >= width - elementDimension) {
         boundX = width - elementDimension;
       }
@@ -101,11 +98,12 @@ var drawEnemy = function(cx, cy) {
   board.append('circle')
     .attr('cx', cx)
     .attr('cy', cy)
-    .attr('r', 20)
+    .attr('r', 25)
     .attr('fill', 'transparent')
     // .transition().duration(750)
     // .attr('fill','url(asteroid.png)');
-    .style("fill", "url(#image)");
+    .style("fill", "url(#image)")
+    .attr('class', 'rotate');
 
     // d3.selectAll('circle').append('image');
 
@@ -132,7 +130,7 @@ var makeEnemies = function(num) {
 var moveEnemies = function() {
   board.selectAll('circle')
     .transition()
-    .duration(1000)
+    .duration(2000)
     .attr('cx', function(d, i) {
       return makeRandomNum(width);
     })
@@ -148,14 +146,23 @@ var drawPlayer = function(cx, cy) {
   //   .attr('d', 'M230 80 A 45 45, 0, 1, 0, 275 125 L 275 80 Z')
   //   .attr('fill', 'blue')
   //   .attr('transform', 'scale(.5)');
-  board.append('rect')
+  board.append('image')
+  .attr('xlink:href', 'marcusNinja.png')
+
     .attr('x', width/2)
     .attr('y', height/2)
-    .attr('width', 25)
-    .attr('height', 25)
-    .attr('fill', 'blue')
-    .attr('class', 'rotate')
+    .attr('width', 150)
+    .attr('height', 150)
+    .attr('fill', 'red')
+    // .style('fill', 'url(#marcus)')
     .call(dragPath);
+  
+  board.select('rect')
+  .append('image')
+  .attr('xlink:href', 'marcusNinja.png')
+  .attr('width',100)
+  .attr('height',100)
+  .style('z-index','9999');
 }
 
 var detectCollision = function(player) {
@@ -164,7 +171,7 @@ var detectCollision = function(player) {
   board.selectAll('circle').each(function(d, i ){
     var cx = d3.select(this).attr('cx');
     var cy = d3.select(this).attr(  'cy');
-    if (Math.abs(cx - playerX) < 30 && Math.abs(cy - playerY) < 30) {
+    if (Math.abs(cx - playerX) < 70 && Math.abs(cy - playerY) < 70) {
       if (highScore < score) {
         var prevHighScore = highScore;
         highScore = score;
@@ -191,7 +198,7 @@ var increaseScore = function() {
 };
 
 setInterval(function(){
-  detectCollision(board.select('rect'));  
+  detectCollision(board.select('image'));  
 },200);
 
 
@@ -203,7 +210,7 @@ makeEnemies(4);
 drawPlayer(0, 0);
 
 setInterval(increaseScore, 100);
-setInterval(moveEnemies, 1000);
+setInterval(moveEnemies, 2000);
 board.selectAll('circle').call(drag);
 board.selectAll('path').call(dragPath);
 
